@@ -20,6 +20,8 @@ use Wx qw( wxVERTICAL wxID_ANY wxDefaultPosition wxDefaultSize wxCB_READONLY wxE
 use Wx::Event;
 use Wx::ArtProvider qw( wxART_FIND );
 
+use Sort::Naturally;
+
 use Scring::Util;
 use Scring::Wx::Widget::LCBase;
 
@@ -242,10 +244,16 @@ sub loadBewertungsliste {
 	
 	my $rs = $schema->resultset( 'Video' )->search( 
 		{ Bewertung => { '!=' => '' } },
-		{ select => [ qw( id Titel Bewertung ) ] }
-	);
+		{ 
+			select => [ qw( id Titel Bewertung ) ],
+			order_by => 'Bewertung',			
+		}
 		
+	);
+	
+	# Spezielle sortierfunktion...
 	my $i = 0;
+	#for my $row ( sort { Sort::Naturally::ncmp( $b->Bewertung, $a->Bewertung ) } $rs->all ) {
 	while ( my $row = $rs->next ) {
 		$this->listCtrl->InsertStringItem( $i, $row->Bewertung );
 		$this->listCtrl->SetItem( $i, 1, $row->Titel );
