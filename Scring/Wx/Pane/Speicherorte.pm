@@ -155,8 +155,10 @@ sub OnActivated {
 	
 	$logger->debug( 'open Item: id '  . $event->GetData . ' - ' . $event->GetText );
 	
+	# Zeige die Search-Pane an und lade den Speicherort
+	# anhand seiner ID
 	$this->search->show( 1 );
-	$this->search->loadView( 'VVideoBySpeicherortId', { SpeicherortId => $event->GetData } );
+	$this->search->loadVideoBySpeicherortId( $event->GetData );
 	
 	1;
 }

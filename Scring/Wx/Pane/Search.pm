@@ -171,8 +171,6 @@ sub OnSelectedListCtrl {
 	
 	$logger->trace( $event->GetIndex );
 	
-	#my $video = $this->listCtrl->GetItem( $event->GetIndex, $this->titleColumn )->GetText;
-	
 	$this->frame->loadVideo( id => $event->GetData );
 }
 
@@ -221,7 +219,7 @@ sub loadView {
 	1;
 }
 
-=head1 DYNAMISCHE VIEW-METHODEN
+=head1 VIEW METHODEN FÜR DIE LC
 
 =head2
 
@@ -239,6 +237,7 @@ sub loadBewertungsliste {
 	$this->listCtrl->ClearAll;
 	$this->listCtrl->AppendColumn( 'Bewertung', undef, 1 );
 	$this->listCtrl->AppendColumn( 'Titel', undef, 6 );
+	$this->listCtrl->OnSize; # force correct alignment
 	
 	my $rs = $schema->resultset( 'Video' )->search( 
 		{ Bewertung => { '!=' => '' } },
@@ -249,7 +248,8 @@ sub loadBewertungsliste {
 		
 	);
 	
-	# Spezielle sortierfunktion...
+	
+
 	my $i = 0;
 	while ( my $row = $rs->next ) {
 		$this->listCtrl->InsertStringItem( $i, $row->Bewertung );
@@ -260,178 +260,35 @@ sub loadBewertungsliste {
 	
 }
 
-=head2 loadVideoBySpeicherortId
+=head2 loadVideoBySpeicherortId( SpeicherortId )
 
 =cut
 
 sub loadVideoBySpeicherortId {
-	my $this = shift;
+	my ( $this, $speicherortId ) = @_;
 	
-	$logger->trace( '---' );
-}
-
-
-
-1;
-
-__END__
-
-=head2 new
-
-=cut
-
-sub new {
-	my $class = shift;
+	return unless $speicherortId;
 	
-	$logger->trace( '---' );
+	$logger->trace( $speicherortId );
 	
-	my $this = $class->SUPER::new( @_ );
+	$this->listCtrl->ClearAll;
+	$this->listCtrl->AppendColumn( 'Titel', undef, 1 );
+	$this->listCtrl->OnSize; # force correct alignment
 	
-	$this->prepareGUI;
-	
-	$this->LoadCB;
-	
-	return $this;
-}
-
-=head2 prepareGUI
-
-=cut
-
-sub prepareGUI {
-	my $this = shift;
-	
-	$logger->trace( '---' );
-	
-	my $S = {};
-	my $P = $this;
-	
-	$S->{Main} = Wx::BoxSizer->new( wxVERTICAL );
-	$S->{Rand} = Wx::BoxSizer->new( wxVERTICAL );
-	$S->{Top}  = Wx::BoxSizer->new( wxHORIZONTAL );
-	
-	$this->{CB} = Wx::ComboBox->new( $P, wxID_ANY, '', wxDefaultPosition, wxDefaultSize, [], wxCB_READONLY );
-	$this->{BTN} = Wx::BitmapButton->new( $P, wxID_ANY, Wx::ArtProvider::GetBitmap( wxART_LIST_VIEW ), wxDefaultPosition, Wx::wxSIZE( 29, 29 ) );
-	$this->{LC} = Wx::ListView->new( $P, wxID_ANY );
-	$this->{ST} = Wx::StaticText->new( $P, wxID_ANY, '' );
-	
-	$S->{Top}->Add( $this->{CB}, 1, wxRIGHT, 10 );
-	$S->{Top}->Add( $this->{BTN}, 0 );
-	
-	$S->{Rand}->Add( $S->{Top}, 0, wxEXPAND | wxBOTTOM, 10 );
-	$S->{Rand}->Add( $this->{LC}, 1, wxEXPAND | wxBOTTOM, 5);
-	$S->{Rand}->Add( $this->{ST}, 0, wxEXPAND );
-
-	$S->{Main}->Add( $S->{Rand}, 1, wxEXPAND | wxALL, 10 );
-	
-	$this->SetSizer( $S->{Main} );
-	$this->SetAutoLayout( 1 );
-	
-	# Events
-	Wx::Event::EVT_COMBOBOX( $this, $this->CB, \&LoadLC );
-	Wx::Event::EVT_BUTTON( $this, $this->{BTN}, \&OnButton );
-	
-	1;
-}
-
-=head2 LoadCB
-
-=cut
-
-sub LoadCB {
-	my $this = shift;
-	
-	$logger->trace( '---' );
-	
-	$this->CB->Clear;
-	$this->CB->Append( [ keys $config->get( 'extendedSearch.querys' ) ] );
-}
-
-=head2 OnButton
-
-=cut
-
-sub OnButton {
-	my $this = shift;
-	
-	require Scring::Wx::Dialog::ExtendedSearchEditor;
-	
-	my $dlg = Scring::Wx::Dialog::ExtendedSearchEditor->new;
-	
-	$dlg->setName( $this->CB->GetStringSelection );
-	$dlg->setSQL( $config->get( 'extendedSearch.querys' )->{ $this->CB->GetStringSelection } );
-	
-	if ( $dlg->ShowModal == wxID_OK ) {
-		$config->get( 'extendedSearch.querys' )->{ $dlg->getName } = $dlg->getSQL;
-	}
-	
-	$dlg->Destroy;
-	
-	$this->LoadCB;
-}
-
-=head2 LoadLC
-
-=cut
-
-sub LoadLC {
-	my $this = shift;
-	
-	$logger->trace( '---' );
-	
-	my $sql = $config->get( 'extendedSearch.querys' )->{ $this->CB->GetStringSelection };
-	
-	my $dbi = $schema->storage->dbh;
-	
-	$dbi->{sqlite_see_if_its_a_number} = 1;
-	
-	my $sth;
-	eval {
-		$sth = $dbi->prepare( $sql );
-		$logger->debug( "direct execute: $sql" );
-		$sth->execute;
-	} or do {
-		$logger->error( $@ );
-		return 0;
-	};
-	
-	$this->LC->ClearAll;
+	my $rs = $schema->resultset( 'Video' )->search(
+		{ 'Speicherorte.Speicherort' => $speicherortId },
+		{
+			select => [ 'me.id', 'me.Titel' ],
+			join => 'Speicherorte'
+		}
+	);
 	
 	my $i = 0;
-	for my $column ( @{ $sth->{NAME} } ) {
-		next if $column eq 'id';
-		
-		$this->LC->InsertColumn( $i, $column, wxLIST_FORMAT_LEFT );
-		
+	while ( my $row = $rs->next ) {
+		$this->listCtrl->InsertStringItem( $i, $row->Titel );
+		$this->listCtrl->SetItemData( $i, $row->id );
 		$i++;
 	}
-	
-	$i = 0;
-	
-	while( my $fetch = $sth->fetchrow_arrayref ) {
-
-		$this->LC->InsertStringItem( $i, $fetch->[1] );
-		$this->LC->SetItemData( $i, $fetch->[0] );
-		
-		for my $k ( 2 .. $#$fetch ) {
-			$this->LC->SetItem( $i, $k - 1, $fetch->[$k] );
-		}
-		$i++;
-	}
-	
 }
-
-=head2 editMode
-
-=cut
-
-sub editMode {
-	my ( $this, $set ) = @_;
-	
-	$this->Enable( ! $set );
-	
-	1;
-}
-
 
 1;
