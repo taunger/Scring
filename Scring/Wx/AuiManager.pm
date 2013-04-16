@@ -31,7 +31,7 @@ use Scring::Wx::Pane::Cover;
 use Scring::Wx::Pane::Misc;
 use Scring::Wx::Pane::Speicherorte;
 use Scring::Wx::Pane::Search;
-
+use Scring::Wx::Toolbar;
 
 use parent -norequire =>  'Wx::AuiManager';
 
@@ -49,6 +49,7 @@ use Object::Tiny qw(
 	reviewViewer
 	speicherorte
 	search
+	toolbar
 );
 
 =head2 new
@@ -111,6 +112,7 @@ sub initialize {
 	
 	# Other Widgets
 	$this->{reviewViewer} = Wx::HtmlWindow->new( $managedWindow, wxID_ANY );
+	$this->{toolbar} = Scring::Wx::Toolbar->new( $managedWindow );
 		
 	$this->AddPane( $this->base        , Scring::Wx::Perspective->defaultPaneInfoFor( 'base' ) );
 	$this->AddPane( $this->videoList   , Scring::Wx::Perspective->defaultPaneInfoFor( 'videoList' ) );
@@ -119,6 +121,7 @@ sub initialize {
 	$this->AddPane( $this->reviewViewer, Scring::Wx::Perspective->defaultPaneInfoFor( 'reviewViewer' ) );
 	$this->AddPane( $this->speicherorte, Scring::Wx::Perspective->defaultPaneInfoFor( 'speicherorte' ) );
 	$this->AddPane( $this->search      , Scring::Wx::Perspective->defaultPaneInfoFor( 'search' ) );
+	$this->AddPane( $this->toolbar     , Scring::Wx::Perspective->defaultPaneInfoFor( 'toolbar' ) );
 	
 	$this->Update;
 	

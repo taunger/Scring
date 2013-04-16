@@ -248,8 +248,6 @@ sub loadBewertungsliste {
 		
 	);
 	
-	
-
 	my $i = 0;
 	while ( my $row = $rs->next ) {
 		$this->listCtrl->InsertStringItem( $i, $row->Bewertung );

@@ -199,6 +199,17 @@ sub defaultPaneInfoFor {
 				#->FloatingPosition( ( $displaySize->GetWidth - 450 ) / 2, ( $displaySize->GetHeight - 600 ) / 2 )
 		}
 		
+		when ( 'toolbar' ) {
+			return Wx::AuiPaneInfo->new
+				->Top
+				->Name( 'toolbar' )
+				->CaptionVisible( 0 )
+				->Resizable( 0 )
+				->Movable( 0 )
+				->Gripper( 0 )
+				->Show( 0 )	
+		}
+		
 		default {
 			$logger->logexit( "Keine default Pane-Information für $paneName" )
 		}

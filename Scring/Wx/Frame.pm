@@ -162,6 +162,8 @@ sub OnClose {
 	$this->Destroy;
 }
 
+# -------
+
 =head2 prepareGUI
 
 =cut
