@@ -42,10 +42,11 @@ use Object::Tiny qw(
 	videoSpeicherorte
 	speicherorte
 	search
-	
-	Base Search Image Info
-	Review ExtendedSearch Toolbar Speicherorte menuShowSpeicherorte menuShowExtendedSearch 
-					 resultset menuEnableEdit defaultPerspective );
+	toolbar
+);	
+#	Base Search Image Info
+#	Review ExtendedSearch Toolbar Speicherorte menuShowSpeicherorte menuShowExtendedSearch 
+#					 resultset menuEnableEdit defaultPerspective );
 
 =head2 new
 
@@ -92,9 +93,12 @@ sub new {
 	# Einige Panes benötigen auch den AuiManager
 	$this->reviews->aui( $this->aui );
 
-	# ruft $frame->SetMenuBar
-	# und verknüpft events mit dem Frame!
-	$this->{menu} = Scring::Wx::Menu->new( $this ); 
+	# ACHTUNG
+	# in den Toolbars und
+	# dem Menu sind Events für das Frame
+	# verknüpft und auch die Implementierung hinterlegt
+	$this->{menu}    = Scring::Wx::Menu->new( $this ); # ruft $frame->SetMenuBar auf 
+	$this->{toolbar} = $this->aui->toolbar;
 
 	Wx::Event::EVT_CLOSE( $this, \&OnClose  );
 	
@@ -161,6 +165,55 @@ sub OnClose {
 	$this->aui->UnInit;
 	$this->Destroy;
 }
+
+=head2 editMode( set? )
+
+returns editMode
+
+=cut
+
+sub editMode {
+	my ( $this, $set ) = @_;
+	
+	return $this->{editMode} if not defined $set;
+	
+	$logger->trace( $set ? 1 : 0 );
+	
+	$this->{editMode} = $set;
+	
+	$this->videoList->editMode( $set );
+	$this->toolbar->editMode( $set );
+	
+	return $set;
+}
+
+=head2 newEntry
+
+=cut
+
+sub newEntry {
+	my $this = shift;
+		
+	$logger->trace( '---' );
+}
+
+=head2 toggleEditMode
+
+=cut
+
+sub toggleEditMode {
+	my $this = shift;
+	
+	$logger->trace( '---' );
+	
+	$this->editMode( ! $this->editMode );
+	
+	1;
+}
+
+1;
+
+__END__
 
 # -------
 
@@ -490,7 +543,7 @@ sub OnAuiButton {
 
 =cut
 
-sub editMode {
+sub editMode2 {
 	my ( $this, $set ) = @_;
 	
 	$logger->trace( !! $set ); # !! - suppress undef warning

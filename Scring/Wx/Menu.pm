@@ -96,8 +96,8 @@ sub initialize {
 	$menu->Append( $this->newEntry );
 	$menu->Append( $this->enableEdit );
 	
-	Wx::Event::EVT_MENU( $frame, $this->newEntry  , sub { ...;$this->Clear; $this->editMode( ! $this->editMode ) } );
-	Wx::Event::EVT_MENU( $frame, $this->enableEdit, sub { ...;$this->editMode( ! $this->editMode ) } );
+	Wx::Event::EVT_MENU( $frame, $this->newEntry  , sub { shift->newEntry } );
+	Wx::Event::EVT_MENU( $frame, $this->enableEdit, sub { shift->toggleEditMode } );
 	
 	$menuBar->Append( $menu, '&Bearbeiten' );
 	

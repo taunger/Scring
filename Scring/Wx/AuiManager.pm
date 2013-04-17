@@ -112,7 +112,7 @@ sub initialize {
 	
 	# Other Widgets
 	$this->{reviewViewer} = Wx::HtmlWindow->new( $managedWindow, wxID_ANY );
-	$this->{toolbar} = Scring::Wx::Toolbar->new( $managedWindow );
+	$this->{toolbar} = Scring::Wx::Toolbar->new( $managedWindow, $this );
 		
 	$this->AddPane( $this->base        , Scring::Wx::Perspective->defaultPaneInfoFor( 'base' ) );
 	$this->AddPane( $this->videoList   , Scring::Wx::Perspective->defaultPaneInfoFor( 'videoList' ) );

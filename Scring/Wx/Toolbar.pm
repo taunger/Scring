@@ -19,9 +19,13 @@ use Wx qw( wxID_ANY wxDefaultPosition wxDefaultSize wxTB_FLAT wxTB_DOCKABLE );
 use Wx::Event;
 use Wx::ArtProvider qw( :artid );
 
-use parent -norequire => qw( Wx::ToolBar );
+use Scring::Wx::Role::Pane;
+
+use parent -norequire => qw( Wx::ToolBar Scring::Wx::Role::Pane );
 
 use Object::Tiny qw( 
+	aui
+	
 	frame
 );
 
@@ -30,9 +34,12 @@ use Object::Tiny qw(
 =cut
 
 sub new {
-	my ( $class, $parent ) = @_;
+	my ( $class, $parent, $auiManager ) = @_;
 	
 	my $this = $class->SUPER::new( $parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTB_FLAT | wxTB_DOCKABLE  );
+	
+	$this->{frame} = $parent;
+	$this->{aui}   = $auiManager;
 	
 	# TODO feature Request to implement this
 	#  $this->AddStretchableSpace;
@@ -40,12 +47,46 @@ sub new {
 	$this->AddSeparator;
 	my $save = $this->AddTool( wxID_ANY, 'Speichern', Wx::ArtProvider::GetBitmap( wxART_FILE_SAVE ) );
 	
-#	Wx::Event::EVT_TOOL( $this, $toolBack->GetId, \&OnToolBack );
-#	Wx::Event::EVT_TOOL( $this, $toolSave->GetId, \&OnToolSave );
+	Wx::Event::EVT_TOOL( $parent, $back->GetId, \&OnBack );
+	Wx::Event::EVT_TOOL( $parent, $save->GetId, \&OnSave );
 	
 	$this->Realize;
-		
+	
 	return $this;
+}
+
+=head2 editMode( set )
+
+=cut
+
+sub editMode {
+	my $this = shift;
+	
+	my $ret = $this->SUPER::editMode( @_ );
+	
+	$this->show( $ret );
+}
+
+=head1 Scring::Wx::Frame Methoden
+
+=head2 OnBack
+
+=cut
+
+sub OnBack {
+	my $this = shift;
+	
+	
+}
+
+=head2 OnSave
+
+=cut
+
+sub OnSave {
+	my $this = shift;
+	
+	
 }
 
 

@@ -24,6 +24,8 @@ use Scring::Util;
 use parent -norequire => qw( Wx::Panel );
 
 use Object::Tiny qw( 
+	frame
+	
 	filter
 	list
 	counter
@@ -35,11 +37,12 @@ use Object::Tiny qw(
 =cut
 
 sub new {
-	my $class = shift;
+	my ( $class, $parent ) = @_;
 	
 	$logger->trace( '---' );
 	
-	my $this = $class->SUPER::new( @_ );
+	my $this = $class->SUPER::new( $parent );
+	$this->{frame} = $parent;	
 	
 	$this->initialize;
 	
@@ -165,6 +168,32 @@ sub OnSelChange_list {
 	my $this = shift;
 	
 	wxTheApp->frame->loadVideo( Titel => $this->list->GetStringSelection );
+	
+	1;
+}
+
+=head2 OnDClick_list
+
+event
+
+=cut
+
+sub OnDClick_list {
+	my ( $this, $event ) = @_;
+	
+	$this->frame->editMode( 1 );
+	
+	1;
+}
+
+=head2 editMode
+
+=cut
+
+sub editMode {
+	my ( $this, $set ) = @_;
+	
+	$this->list->Enable( ! $set );
 	
 	1;
 }
