@@ -161,12 +161,12 @@ sub defaultPaneInfoFor {
 				->Caption( 'Review Betrachter' )
 				->CaptionVisible( 1 )
 				->CloseButton( 1 )
-				->MinSize( Wx::wxSIZE( 450, 600 ) )
+				->MinSize( Wx::wxSIZE( 550, 700 ) )
 				->MinimizeButton( 1 )
 				->MaximizeButton( 1 )
 				->PinButton( 1 )
 				->Float
-				->FloatingPosition( ( $displaySize->GetWidth - 450 ) / 2, ( $displaySize->GetHeight - 600 ) / 2 )
+				->FloatingPosition( ( $displaySize->GetWidth - 550 ) / 2, ( $displaySize->GetHeight - 700 ) / 2 )
 				->Show( 0 )
 		}
 		

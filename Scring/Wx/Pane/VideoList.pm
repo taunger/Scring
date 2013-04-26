@@ -20,8 +20,9 @@ use Wx qw(  wxEXPAND wxALL wxID_ANY wxVERTICAL wxLB_SORT wxDefaultPosition wxDef
 			WXK_UP WXK_DOWN WXK_ESCAPE wxNOT_FOUND wxTheApp );
 
 use Scring::Util;
+use Scring::Wx::Role::Pane;
 
-use parent -norequire => qw( Wx::Panel );
+use parent -norequire => qw( Wx::Panel Scring::Wx::Role::Pane );
 
 use Object::Tiny qw( 
 	frame
@@ -70,7 +71,7 @@ sub initialize {
 	$this->{filter}->ShowSearchButton( 0 );
 	$this->{filter}->ShowCancelButton( 0 );
 	
-	$this->{list} = Wx::ListBox->new( $this, wxID_ANY, wxDefaultPosition, wxDefaultSize, [] );
+	$this->{list} = Wx::ListBox->new( $this, wxID_ANY, wxDefaultPosition, wxDefaultSize, [], wxLB_SORT );
 	
 	$this->{counter} = Wx::StaticText->new( $this, wxID_ANY, '' );
 		
@@ -160,6 +161,18 @@ sub focusFilter {
 	return $this->filter->SetFocus;
 }
 
+=head2 focusList
+
+=cut
+
+sub focusList {
+	my $this = shift;
+	
+	$logger->trace( '---' );
+	
+	return $this->list->SetFocus;
+}
+
 =head2 OnSelChange_list
 
 =cut
@@ -192,6 +205,8 @@ sub OnDClick_list {
 
 sub editMode {
 	my ( $this, $set ) = @_;
+	
+	$this->SUPER::editMode( $set );
 	
 	$this->list->Enable( ! $set );
 	

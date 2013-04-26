@@ -19,6 +19,7 @@ use Wx qw( wxID_ANY wxDefaultPosition wxDefaultSize wxTB_FLAT wxTB_DOCKABLE );
 use Wx::Event;
 use Wx::ArtProvider qw( :artid );
 
+use Scring::Util;
 use Scring::Wx::Role::Pane;
 
 use parent -norequire => qw( Wx::ToolBar Scring::Wx::Role::Pane );
@@ -42,7 +43,7 @@ sub new {
 	$this->{aui}   = $auiManager;
 	
 	# TODO feature Request to implement this
-	#  $this->AddStretchableSpace;
+	# $this->AddStretchableSpace;
 	my $back = $this->AddTool( wxID_ANY, 'Abbrechen', Wx::ArtProvider::GetBitmap( wxART_GO_BACK ) );
 	$this->AddSeparator;
 	my $save = $this->AddTool( wxID_ANY, 'Speichern', Wx::ArtProvider::GetBitmap( wxART_FILE_SAVE ) );
@@ -76,7 +77,9 @@ sub editMode {
 sub OnBack {
 	my $this = shift;
 	
+	# TODO Video auf Änderungen überprüfen
 	
+	$this->editMode( 0 );
 }
 
 =head2 OnSave

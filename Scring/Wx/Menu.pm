@@ -82,7 +82,8 @@ sub initialize {
 	$menu->Append( $this->exit );
 
 	# sendet close event, wird im frame nochmal abgefangen
-	Wx::Event::EVT_MENU( $frame, wxID_EXIT, sub{ $frame->Close } ); 
+	Wx::Event::EVT_MENU( $frame, $this->preferences, sub{ $frame->showPreferences } );
+	Wx::Event::EVT_MENU( $frame, wxID_EXIT         , sub{ $frame->Close } ); 
 	
 	$menuBar->Append( $menu, '&Scring' );
 	

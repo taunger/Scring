@@ -102,14 +102,15 @@ sub new {
 
 	Wx::Event::EVT_CLOSE( $this, \&OnClose  );
 	
-	$this->videoList->focusFilter; 	# starte in der suchbox
-
 	# lade letzten Titel
 	$this->videoList->setSelectedTitle( $config->get( 'user.lastTitle' ) );
 	$this->loadVideo( Titel => $config->get( 'user.lastTitle' ) );
 	
 	# Misc Tab setzen
 	$this->misc->SetSelection( $config->get( 'user.lastMiscTab' ) );
+	
+	#$this->videoList->focusFilter; 	# starte in der suchbox
+	$this->videoList->focusList;
 	
 	return $this;	
 }
@@ -207,6 +208,24 @@ sub toggleEditMode {
 	$logger->trace( '---' );
 	
 	$this->editMode( ! $this->editMode );
+	
+	1;
+}
+
+=head2 showPreferences
+
+=cut
+
+sub showPreferences {
+	my $this = shift;
+	
+	$logger->trace( '---' );
+	
+	require Scring::Wx::Dialog::Preferences;
+	
+	my $dlg = Scring::Wx::Dialog::Preferences->new( $this );
+	$dlg->ShowModal;
+	$dlg->Destroy;
 	
 	1;
 }

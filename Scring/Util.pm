@@ -236,6 +236,7 @@ sub defaultConfig {
 	'wx.dialog.EditSpeicherort.size'  => [ 600, 250 ],
 	'wx.dialog.EditLink.size'  => [ 500, 180 ],
 	'wx.dialog.ExtendedSearchEditor.size' => [ 500, 500 ],
+	'wx.dialog.preferences.size' => [ 900, 600 ],
 	
 	'wx.defaultFontPointSize'    => undef,
 	'wx.panel.base.textctrlSize' => [ -1, 22 ],

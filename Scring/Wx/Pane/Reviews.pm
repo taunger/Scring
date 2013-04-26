@@ -101,6 +101,7 @@ sub OnActivated {
 	$this->reviewViewer->SetPage(
 		$schema->resultset( 'Review' )->findReview( $id ) 
 	);
+	$this->reviewViewer->SetFocus;
 
 	1;
 }
