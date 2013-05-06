@@ -176,7 +176,7 @@ sub defaultPaneInfoFor {
 				->Caption( 'Speicherorte' )
 				->CaptionVisible( 1 )
 				->CloseButton( 0 )
-				->MinSize( Wx::wxSIZE( 320, 500 ) )
+				->MinSize( Wx::wxSIZE( 400, 500 ) )
 				->PaneBorder( 1 )
 				->Top
 				->Show( 0 )

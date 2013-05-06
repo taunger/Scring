@@ -226,7 +226,7 @@ sub defaultConfig {
 	'app.file.defaultlog' => File::Spec->catfile( $FindBin::Bin, 'userdata', $ENV{USERNAME} . '.log' ),
 	'app.file.icon'       => File::Spec->catfile( $FindBin::Bin, 'ressource', 'Scring.ico' ),
 	'app.db.dataSource'   => 'dbi:SQLite:dbname=' . File::Spec->catfile( $FindBin::Bin, 'userdata', 'Scring.db' ),
-	
+
 	'bug.wxlocale' => 0,
 		
 	'wx.perspective.user'    => [],
@@ -237,6 +237,7 @@ sub defaultConfig {
 	'wx.dialog.EditLink.size'  => [ 500, 180 ],
 	'wx.dialog.ExtendedSearchEditor.size' => [ 500, 500 ],
 	'wx.dialog.preferences.size' => [ 900, 600 ],
+	'wx.dialog.TextCtrlGenre.MultiChoiceDialog.size' => [ 300, 650 ],
 	
 	'wx.defaultFontPointSize'    => undef,
 	'wx.panel.base.textctrlSize' => [ -1, 22 ],

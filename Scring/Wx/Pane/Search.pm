@@ -54,6 +54,7 @@ sub new {
 	$this->{dispatcher} = {
 		'Bewertungsliste'          => 'loadBewertungsliste',
 		'Einträge für Speicherort' => 'loadVideoBySpeicherortId',
+		'Offene Animes'            => 'loadOpenAnimes'
 	};
 	
 	
@@ -287,6 +288,37 @@ sub loadVideoBySpeicherortId {
 		$this->listCtrl->SetItemData( $i, $row->id );
 		$i++;
 	}
+}
+
+=head2 loadOpenAnimes
+
+=cut
+
+sub loadOpenAnimes {
+	my $this = shift;
+	
+	$logger->trace( '---' );
+	
+	$this->listCtrl->ClearAll;
+	$this->listCtrl->AppendColumn( 'Titel', undef, 1 );
+	$this->listCtrl->OnSize;
+	
+	my $rs = $schema->resultset( 'Video' )->search( 
+		{ isAnime => 1, Bewertung => '' },
+		{
+			select => [ 'id', 'Titel' ],
+			order_by => { -asc => 'id' }
+		}
+	);
+	
+	my $i = 0;
+	
+	while ( my $row = $rs->next ) {
+		$this->listCtrl->InsertStringItem( $i, $row->Titel );
+		$this->listCtrl->SetItemData( $i, $row->id );
+		$i++;
+	}
+	
 }
 
 1;

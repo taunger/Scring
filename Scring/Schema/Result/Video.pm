@@ -14,12 +14,13 @@ __PACKAGE__->add_column( 'isAnime'          => { data_type => 'boolean'  } );
 __PACKAGE__->add_column( 'Erscheinungsjahr' => { data_type => 'integer' , is_nullable => 1, size => 4 } );
 __PACKAGE__->add_column( 'Produktionsland'  => { data_type => 'varchar2', is_nullable => 1 } );
 __PACKAGE__->add_column( 'Regisseur'        => { data_type => 'varchar2', is_nullable => 1 } );
-__PACKAGE__->add_column( 'Laufzeit'         => { data_type => 'varchar2', is_nullable => 1 } );
-__PACKAGE__->add_column( 'Folgen'           => { data_type => 'varchar2', is_nullable => 1 } );
-__PACKAGE__->add_column( 'IMDB'             => { data_type => 'real'    , is_nullable => 1 } );
-__PACKAGE__->add_column( 'OFDB'             => { data_type => 'real'    , is_nullable => 1 } );
-__PACKAGE__->add_column( 'Anisearch'        => { data_type => 'real'    , is_nullable => 1 } );
-__PACKAGE__->add_column( 'Bewertung'        => { data_type => 'real'    , is_nullable => 1 } );
+__PACKAGE__->add_column( 'Minuten'          => { data_type => 'varchar2', is_nullable => 1 } ); # varchar2 um datatype missmatch zu verhindern
+__PACKAGE__->add_column( 'Episoden'         => { data_type => 'varchar2', is_nullable => 1 } ); # varchar2 um datatype missmatch zu verhindern
+__PACKAGE__->add_column( 'LaufzeitExtra'    => { data_type => 'varchar2', is_nullable => 1 } );
+__PACKAGE__->add_column( 'IMDB'             => { data_type => 'real'    , is_nullable => 1, is_numeric => 0 } ); # is_numeric, damit bei vergleichen mit '' keine Warnung
+__PACKAGE__->add_column( 'OFDB'             => { data_type => 'real'    , is_nullable => 1, is_numeric => 0 } ); # is_numeric, damit bei vergleichen mit '' keine Warnung
+__PACKAGE__->add_column( 'Anisearch'        => { data_type => 'real'    , is_nullable => 1, is_numeric => 0 } ); # is_numeric, damit bei vergleichen mit '' keine Warnung
+__PACKAGE__->add_column( 'Bewertung'        => { data_type => 'real'    , is_nullable => 1, is_numeric => 0 } ); # is_numeric, damit bei vergleichen mit '' keine Warnung
 __PACKAGE__->add_column( 'Handlung'         => { data_type => 'varchar2', is_nullable => 1 } );
 __PACKAGE__->add_column( 'Kommentar'        => { data_type => 'varchar2', is_nullable => 1 } );
 __PACKAGE__->add_column( 'Info'             => { data_type => 'varchar2', is_nullable => 1 } );
@@ -73,9 +74,30 @@ __PACKAGE__->has_many( 'Images' => 'Scring::Schema::Result::Image', 'Video' );
 sub GenreAsString {
 	my $this = shift;
 	
+	warn 'XXX Funktion obsolete XXX';
+	
 	# Prefetch Limitierung bei many-to-many führt zu diesem Konstrukt
 	# siehe http://lists.scsys.co.uk/pipermail/dbix-class/2006-August/002175.html
 	return join ';', map { $_->Bezeichnung } $this->Genre;
+}
+
+=head2 LaufzeitAsString
+
+=cut
+
+sub LaufzeitAsString {
+	my $this = shift;
+	
+	my $ret = '';
+	
+	$ret .= $this->Minuten . ' Min '             if $this->Minuten;
+	$ret .= '(' . $this->Episoden . ' Episoden) ' if $this->Episoden;
+	
+	return $this->LaufzeitExtra if not $ret;
+	
+	$ret .= '/ ' . $this->LaufzeitExtra if $this->LaufzeitExtra;
+	
+	return $ret;
 }
 
 1;

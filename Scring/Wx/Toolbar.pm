@@ -77,6 +77,8 @@ sub editMode {
 sub OnBack {
 	my $this = shift;
 	
+	$logger->trace( '---' );
+	
 	# TODO Video auf Änderungen überprüfen
 	
 	$this->editMode( 0 );
@@ -89,7 +91,11 @@ sub OnBack {
 sub OnSave {
 	my $this = shift;
 	
+	$logger->trace( '---' );
 	
+	$this->saveVideo;
+	
+	1;
 }
 
 

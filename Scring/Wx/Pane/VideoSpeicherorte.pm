@@ -77,7 +77,26 @@ sub loadFrom {
 		$i++;
 	}
 	
+	# Wenn ein Titel geladen wird,
+	# dessen Speicherorte nicht in die Box passen,
+	# wird dadurch leider nicht OnSize ausgelöst,
+	# und die Darstellung ist daher noch auf den "alten"
+	# Stand ohne verticale Scrollbar
+	# Fix durch manuelles aufrufen von OnSize
+	# funktioniert leider auch nicht richtig
+	# $this->OnSize;
+	
 	1;
+}
+
+=head2 clear
+
+=cut
+
+sub clear {
+	my $this = shift;
+	
+	$this->DeleteAllItems;
 }
 
 1;

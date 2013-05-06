@@ -29,6 +29,7 @@ use Object::Tiny qw(
 	exit
 	newEntry
 	enableEdit
+	deleteEntry
 	about
 	perspectiveSubmenu
 	speicherorte
@@ -91,14 +92,18 @@ sub initialize {
 	# Menü Bearbeiten
 	$menu = Wx::Menu->new;
 	
-	$this->{newEntry}   = Wx::MenuItem->new( $menu, wxID_ANY, "Neuer Eintrag\tCTRL-N"    , '', wxITEM_CHECK );
-	$this->{enableEdit} = Wx::MenuItem->new( $menu, wxID_ANY, "Eintrag editieren\tCTRL-E", '', wxITEM_CHECK );
+	$this->{newEntry}    = Wx::MenuItem->new( $menu, wxID_ANY, "Neuer Eintrag\tCTRL-N" );
+	$this->{enableEdit}  = Wx::MenuItem->new( $menu, wxID_ANY, "Eintrag editieren\tCTRL-E", '', wxITEM_CHECK );
+	$this->{deleteEntry} = Wx::MenuItem->new( $menu, wxID_ANY, "Eintrag löschen" ); 
 	
 	$menu->Append( $this->newEntry );
 	$menu->Append( $this->enableEdit );
+	$menu->AppendSeparator;
+	$menu->Append( $this->deleteEntry );
 	
-	Wx::Event::EVT_MENU( $frame, $this->newEntry  , sub { shift->newEntry } );
-	Wx::Event::EVT_MENU( $frame, $this->enableEdit, sub { shift->toggleEditMode } );
+	Wx::Event::EVT_MENU( $frame, $this->newEntry   , sub { shift->newEntry } );
+	Wx::Event::EVT_MENU( $frame, $this->enableEdit , sub { shift->toggleEditMode } );
+	Wx::Event::EVT_MENU( $frame, $this->deleteEntry, sub { shift->deleteEntry } );
 	
 	$menuBar->Append( $menu, '&Bearbeiten' );
 	

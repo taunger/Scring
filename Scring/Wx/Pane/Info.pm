@@ -50,4 +50,42 @@ sub loadFrom {
 	1;
 }
 
+=head2 storeTo( resultset )
+
+=cut
+
+sub storeTo {
+	my ( $this, $rs ) = @_;
+	
+	$rs->Info( $this->GetValue );
+	
+	1;
+}
+
+=head2 clear
+
+=cut
+
+sub clear {
+	my $this = shift;
+	
+	$this->Clear;
+}
+
+=head2 editMode
+
+=cut
+
+sub editMode {
+	my ( $this, $set ) = @_;
+	
+	return $this->{editMode} if not $set;
+	
+	$this->SetEditable( $set );
+	
+	$this->{editMode} = $set;
+	
+	1;
+}
+
 1;

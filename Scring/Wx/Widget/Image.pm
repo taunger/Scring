@@ -135,6 +135,8 @@ sub resizeBitmap {
 
 stream ist eine Scalar-Reference auf ein Bild-Binärblob
 
+Sollte stream auf undef referenzieren, wird Clear aufgerufen
+
 
 =cut
 
@@ -150,6 +152,13 @@ sub loadStream {
 	
 	$logger->trace( $stream );
 	
+	# Wenn kein Bild hinterlegt ist, das aktuelle Bild
+	# zurücksetzen
+	if ( not $$stream ) {
+		$this->Clear;
+		return 0;
+	}
+		
 	eval {
 		open my $fh, '<', $stream or die "Bildstream konnte nicht geöffnet werden: $!";
 

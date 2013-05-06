@@ -15,7 +15,7 @@ Scring::Wx::Frame
 use 5.16.0;
 use warnings;
 
-use Wx qw( wxID_ANY wxID_ABOUT wxID_EXIT wxDefaultPosition wxDefaultSize wxITEM_CHECK wxTB_FLAT wxTB_DOCKABLE );
+use Wx qw( wxID_ANY wxID_ABOUT wxID_EXIT wxDefaultPosition wxDefaultSize wxITEM_CHECK wxTB_FLAT wxTB_DOCKABLE  wxOK wxCANCEL wxCENTRE wxID_OK );
 use Wx::Event;
 use Wx::AUI;
 use Wx::Html;
@@ -31,6 +31,8 @@ use parent -norequire => qw( Wx::Frame );
 use Object::Tiny qw( 
 	aui 
 	menu
+	
+	resultset
 	
 	base
 	videoList
@@ -120,6 +122,7 @@ sub new {
 Args wird in find von resultset( 'Video' ) übergeben
 Sinnvolle Keys sind id oder Titel.
 
+Verweigert das laden eines Videos im EditMode
 
 =cut
 
@@ -127,6 +130,11 @@ sub loadVideo {
 	my ( $this, %args ) = @_;
 	
 	$logger->trace( join ' - ', %args );
+	
+	if ( $this->editMode ) {
+		$logger->warn( 'Im Editiermodus ist das laden eines Videos nicht erlaubt!' );
+		return 0;
+	}
 	
 	my $rs = $schema->resultset( 'Video' )->findVideo( %args );
 	
@@ -138,6 +146,10 @@ sub loadVideo {
 	$this->links->loadFrom( $rs );
 	$this->info ->loadFrom( $rs );
 	$this->videoSpeicherorte->loadFrom( $rs );
+	
+	$this->{resultset} = $rs;
+	
+	1;
 }
 
 =head2 OnClose
@@ -184,6 +196,12 @@ sub editMode {
 	
 	$this->videoList->editMode( $set );
 	$this->toolbar->editMode( $set );
+	$this->base->editMode( $set );
+	$this->info->editMode( $set );
+	
+	# Wenn editMode deaktiviert, Fokus wieder
+	# auf die listBox setzen
+	$this->videoList->focusList if not $set;	
 	
 	return $set;
 }
@@ -196,6 +214,10 @@ sub newEntry {
 	my $this = shift;
 		
 	$logger->trace( '---' );
+	
+	$this->clear;
+	$this->{resultset} = $schema->resultset( 'Video' )->new( {} );
+	$this->editMode( 1 );
 }
 
 =head2 toggleEditMode
@@ -226,6 +248,96 @@ sub showPreferences {
 	my $dlg = Scring::Wx::Dialog::Preferences->new( $this );
 	$dlg->ShowModal;
 	$dlg->Destroy;
+	
+	1;
+}
+
+=head2 saveVideo
+
+=cut
+
+sub saveVideo {
+	my $this = shift;
+	
+	$logger->trace( '---' );
+	
+	my $rs = $this->resultset;
+	
+	$schema->txn_begin;
+
+	eval {
+		$this->base->storeTo( $rs );
+		$this->info->storeTo( $rs );
+	} 
+	or do {
+		$schema->txn_rollback;
+		$logger->error( $@ );
+		return 0;
+	};
+	
+	$schema->txn_commit;
+	
+#	if ( $rs->in_storage ) {
+#		$logger->debug( 'update' );
+#		$rs->update;
+#	} else {
+#		$logger->debug( 'insert' );
+#		$rs->insert;
+#	}
+	
+	$this->editMode( 0 );
+	$this->loadVideo( id => $rs->id );
+	
+	1;
+}
+
+=head2 clear
+
+=cut
+
+sub clear {
+	my $this = shift;
+	
+	$this->base->clear;
+	$this->cover->clear;
+	$this->info->clear;
+	$this->reviews->clear;
+	$this->links->clear;
+	$this->videoSpeicherorte->clear;
+}
+
+=head2 deleteEntry
+
+löscht den aktuell ausgewählten Eintrag, 
+wenn er in der Datenbank existiert
+
+=cut
+
+sub deleteEntry {
+	my $this = shift;
+	
+	my $rs = $this->resultset;
+	
+	# Mache nichts, wenn gar kein resultset geladen,
+	# oder wenn das resultset new ist und gar keine ID hat
+	return if not ( $rs and $rs->id );
+	
+	$logger->debug( 'Versuche ' . $rs->id . ' zu löschen' );
+	
+	my $dlg = Wx::MessageDialog->new( 
+		$this, 
+		sprintf( 'Soll %s (%s) wirklich gelöscht werden?', $rs->Titel, $rs->id ),
+		'Wirklich löschen?',
+		 wxOK | wxCANCEL | wxCENTRE
+	);
+	
+	if ( $dlg->ShowModal == wxID_OK ) {
+		$rs->delete;
+	}
+	
+	$dlg->Destroy;
+	
+	$this->videoList->loadList;
 	
 	1;
 }

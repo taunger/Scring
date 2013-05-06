@@ -84,6 +84,16 @@ sub loadFrom {
 	1;
 }
 
+=head2 clear
+
+=cut
+
+sub clear {
+	my $this = shift;
+	
+	$this->DeleteAllItems;
+}
+
 1;
 
 __END__

@@ -30,6 +30,23 @@ $sth = $dbh->prepare( 'select * from video' );
 $sth->execute;
 
 while ( my $fetch = $sth->fetchrow_hashref ) {
+
+	# Die Laufzeit, wo es sicher ist,
+	# herausparsen
+	my $ret = $fetch->{Laufzeit} =~ /^(\d{1,3}) Min \((\d{1,3}) Episoden\)(?: + (.+))?/;
+	my ( $m, $e, $l ) = ( '', '', $fetch->{Laufzeit} );
+	
+	if ( $ret ) {
+		 $m = $1;
+		 $e = $2;
+		 $l = $3 // '';
+		 if ( not ( $m and $e ) ) {
+			$l = $fetch->{Laufzeit};
+		 }
+	}
+	
+	
+
 	$schema->resultset( 'Video' )->create( {
 		'id'               => $fetch->{ID},
 		'Titel'            => $fetch->{Titel},
@@ -39,8 +56,9 @@ while ( my $fetch = $sth->fetchrow_hashref ) {
 		'Erscheinungsjahr' => $fetch->{Erscheinungsjahr},
 		'Produktionsland'  => $fetch->{Produktionsland},
 		'Regisseur'        => $fetch->{Regisseur},
-		'Laufzeit'         => $fetch->{Laufzeit},
-		'Folgen'           => $fetch->{Folgen},
+		'Minuten'          => $m,
+		'Episoden'         => $e,
+		'LaufzeitExtra'    => $l,
 		'IMDB'             => $fetch->{IMDB},
 		'OFDB'             => $fetch->{OFDB},
 		'Anisearch'        => $fetch->{Anisearch},
