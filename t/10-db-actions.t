@@ -79,6 +79,13 @@ ok( 'Zeichentrick' ~~ \@genre );
 ok( 'Drama' ~~ \@genre );
 ok( 'Aktion' ~~ \@genre );
 
+# link hinzu
+$video->create_related( 'Links', { LinkBezeichnung => 1, URL => 123 } );
+#$schema->resultset( 'Link' )->create( {
+#	Video => 1,
+#	LinkBezeichnung => 1,
+#	URL => 123	
+#} );
 
 
 

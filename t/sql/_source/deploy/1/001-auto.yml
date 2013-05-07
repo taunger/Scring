@@ -1,0 +1,1092 @@
+---
+schema:
+  procedures: {}
+  tables:
+    Genre:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Bezeichnung
+          match_type: ''
+          name: Genre_Bezeichnung
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        Bezeichnung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Bezeichnung
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: Genre
+      options: []
+      order: 1
+    Image:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+          match_type: ''
+          name: Image_fk_Video
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Video
+          type: FOREIGN KEY
+      fields:
+        Video:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Video
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        image:
+          data_type: blob
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: image
+          order: 3
+          size:
+            - 0
+      indices:
+        - fields:
+            - Video
+          name: Image_idx_Video
+          options: []
+          type: NORMAL
+      name: Image
+      options: []
+      order: 5
+    Link:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - LinkBezeichnung
+          match_type: ''
+          name: Link_fk_LinkBezeichnung
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: LinkBezeichnung
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+          match_type: ''
+          name: Link_fk_Video
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Video
+          type: FOREIGN KEY
+      fields:
+        LinkBezeichnung:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: LinkBezeichnung
+          order: 3
+          size:
+            - 0
+        URL:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: URL
+          order: 4
+          size:
+            - 0
+        Video:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Video
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - LinkBezeichnung
+          name: Link_idx_LinkBezeichnung
+          options: []
+          type: NORMAL
+        - fields:
+            - Video
+          name: Link_idx_Video
+          options: []
+          type: NORMAL
+      name: Link
+      options: []
+      order: 8
+    LinkBezeichnung:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Bezeichnung
+          match_type: ''
+          name: LinkBezeichnung_Bezeichnung
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        Bezeichnung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Bezeichnung
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: LinkBezeichnung
+      options: []
+      order: 2
+    Review:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - ReviewAuthor
+          match_type: ''
+          name: Review_fk_ReviewAuthor
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: ReviewAuthor
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+          match_type: ''
+          name: Review_fk_Video
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Video
+          type: FOREIGN KEY
+      fields:
+        Bewertung:
+          data_type: real
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Bewertung
+          order: 4
+          size:
+            - 0
+        Review:
+          data_type: clob
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Review
+          order: 5
+          size:
+            - 0
+        ReviewAuthor:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: ReviewAuthor
+          order: 3
+          size:
+            - 0
+        Video:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Video
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - ReviewAuthor
+          name: Review_idx_ReviewAuthor
+          options: []
+          type: NORMAL
+        - fields:
+            - Video
+          name: Review_idx_Video
+          options: []
+          type: NORMAL
+      name: Review
+      options: []
+      order: 9
+    ReviewAuthor:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Bezeichnung
+          match_type: ''
+          name: ReviewAuthor_Bezeichnung
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        Bezeichnung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Bezeichnung
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: ReviewAuthor
+      options: []
+      order: 3
+    Speicherort:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Bezeichnung
+          match_type: ''
+          name: Speicherort_Bezeichnung
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Standort
+          match_type: ''
+          name: Speicherort_fk_Standort
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - id
+          reference_table: Standort
+          type: FOREIGN KEY
+      fields:
+        Bezeichnung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Bezeichnung
+          order: 2
+          size:
+            - 0
+        Standort:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Standort
+          order: 3
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - Standort
+          name: Speicherort_idx_Standort
+          options: []
+          type: NORMAL
+      name: Speicherort
+      options: []
+      order: 6
+    Standort:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Bezeichnung
+          match_type: ''
+          name: Standort_Bezeichnung
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Standort
+          match_type: ''
+          name: Standort_fk_Standort
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Standort
+          type: FOREIGN KEY
+      fields:
+        Bezeichnung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Bezeichnung
+          order: 2
+          size:
+            - 0
+        Standort:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Standort
+          order: 4
+          size:
+            - 0
+        aktiv:
+          data_type: boolean
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: aktiv
+          order: 3
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - Standort
+          name: Standort_idx_Standort
+          options: []
+          type: NORMAL
+      name: Standort
+      options: []
+      order: 4
+    Video:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Originaltitel
+          match_type: ''
+          name: Video_Originaltitel
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Titel
+          match_type: ''
+          name: Video_Titel
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - CoverImage
+          match_type: ''
+          name: Video_fk_CoverImage
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - id
+          reference_table: Image
+          type: FOREIGN KEY
+      fields:
+        Anisearch:
+          data_type: real
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Anisearch
+          order: 14
+          size:
+            - 0
+        Bewertung:
+          data_type: real
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Bewertung
+          order: 15
+          size:
+            - 0
+        CoverImage:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: CoverImage
+          order: 19
+          size:
+            - 0
+        Episoden:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Episoden
+          order: 10
+          size:
+            - 0
+        Erscheinungsjahr:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Erscheinungsjahr
+          order: 6
+          size:
+            - 4
+        Handlung:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Handlung
+          order: 16
+          size:
+            - 0
+        IMDB:
+          data_type: real
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: IMDB
+          order: 12
+          size:
+            - 0
+        Info:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Info
+          order: 18
+          size:
+            - 0
+        Kommentar:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Kommentar
+          order: 17
+          size:
+            - 0
+        LaufzeitExtra:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: LaufzeitExtra
+          order: 11
+          size:
+            - 0
+        Minuten:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Minuten
+          order: 9
+          size:
+            - 0
+        OFDB:
+          data_type: real
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: OFDB
+          order: 13
+          size:
+            - 0
+        Originaltitel:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Originaltitel
+          order: 3
+          size:
+            - 0
+        Produktionsland:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Produktionsland
+          order: 7
+          size:
+            - 0
+        Regisseur:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: Regisseur
+          order: 8
+          size:
+            - 0
+        Titel:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Titel
+          order: 2
+          size:
+            - 0
+        created:
+          data_type: datetime
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: created
+          order: 20
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        isAnime:
+          data_type: boolean
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: isAnime
+          order: 5
+          size:
+            - 0
+        isSerie:
+          data_type: boolean
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: isSerie
+          order: 4
+          size:
+            - 0
+        updated:
+          data_type: datetime
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: updated
+          order: 21
+          size:
+            - 0
+      indices:
+        - fields:
+            - CoverImage
+          name: Video_idx_CoverImage
+          options: []
+          type: NORMAL
+      name: Video
+      options: []
+      order: 7
+    VideoGenre:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+            - Genre
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Genre
+          match_type: ''
+          name: VideoGenre_fk_Genre
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Genre
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+          match_type: ''
+          name: VideoGenre_fk_Video
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Video
+          type: FOREIGN KEY
+      fields:
+        Genre:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: Genre
+          order: 2
+          size:
+            - 0
+        Video:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: Video
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - Genre
+          name: VideoGenre_idx_Genre
+          options: []
+          type: NORMAL
+        - fields:
+            - Video
+          name: VideoGenre_idx_Video
+          options: []
+          type: NORMAL
+      name: VideoGenre
+      options: []
+      order: 10
+    VideoSpeicherort:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+            - Speicherort
+          match_type: ''
+          name: VideoSpeicherort_Video_Speicherort
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Speicherort
+          match_type: ''
+          name: VideoSpeicherort_fk_Speicherort
+          on_delete: ''
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Speicherort
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - Video
+          match_type: ''
+          name: VideoSpeicherort_fk_Video
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: Video
+          type: FOREIGN KEY
+      fields:
+        Inhalt:
+          data_type: varchar2
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: Inhalt
+          order: 4
+          size:
+            - 0
+        Speicherort:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Speicherort
+          order: 3
+          size:
+            - 0
+        Video:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: Video
+          order: 2
+          size:
+            - 0
+        created:
+          data_type: datetime
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: created
+          order: 5
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        updated:
+          data_type: datetime
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: updated
+          order: 6
+          size:
+            - 0
+      indices:
+        - fields:
+            - Speicherort
+          name: VideoSpeicherort_idx_Speicherort
+          options: []
+          type: NORMAL
+        - fields:
+            - Video
+          name: VideoSpeicherort_idx_Video
+          options: []
+          type: NORMAL
+      name: VideoSpeicherort
+      options: []
+      order: 11
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 0
+  parser_args:
+    sources:
+      - VideoGenre
+      - Review
+      - Video
+      - ReviewAuthor
+      - Genre
+      - LinkBezeichnung
+      - Image
+      - VideoSpeicherort
+      - Speicherort
+      - Standort
+      - Link
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args: {}
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11016

@@ -57,7 +57,10 @@ sub loadFrom {
 sub storeTo {
 	my ( $this, $rs ) = @_;
 	
+	# Dadurch wird ein zweites Mal die video-Tabelle beschreiben,
+	# eventuell nicht optimal
 	$rs->Info( $this->GetValue );
+	$rs->update; 
 	
 	1;
 }

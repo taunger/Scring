@@ -256,16 +256,16 @@ sub storeTo {
 	
 	$rs->isAnime( $W->{CH_Anime}->GetValue ? 1 : 0 );
 	$rs->isSerie( $W->{CH_Serie}->GetValue ? 1 : 0 );
-	#$W->{ED_Genre}->ChangeValue( $rs->GenreAsString );
 	
 	# Ein Speichern tut damit zumindest immer den Zeitstempel aktualisieren
-	$rs->make_column_dirty( 'updated' );
+	$rs->updated( $rs->get_timestamp );
 	
 	$rs->in_storage 
 		? $rs->update 
 		: $rs->insert
 	;
 	
+	# Genre speichern lassen
 	$W->{ED_Genre}->storeTo( $rs );
 	
 	1;

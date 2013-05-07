@@ -22,10 +22,9 @@ use Wx::Event;
 use Scring::Util;
 use Scring::Wx::Widget::LCBase;
 
-use parent -norequire => qw( Scring::Wx::Widget::LCBase );
+use parent -norequire => qw( Scring::Wx::Widget::LCBase Scring::Wx::Role::Pane );
 
-#use Object::Tiny qw( ContextMenu );
-#use Object::Tiny::RW qw( editMode );
+use Object::Tiny qw( contextMenu );
 
 =head2 new
 
@@ -41,23 +40,23 @@ sub new {
 	$this->AppendColumn( 'Bezeichnung', wxLIST_FORMAT_LEFT, 1 );
 	$this->AppendColumn( 'URL'        , wxLIST_FORMAT_LEFT, 2 );
 	
-#	my $menu = $this->{ContextMenu} = Wx::Menu->new;
-#		
-#	my $addEntry    = Wx::MenuItem->new( $menu, wxID_ANY, 'Neu' );
-#	my $editEntry   = Wx::MenuItem->new( $menu, wxID_ANY, 'Bearbeiten' );
-#	my $removeEntry = Wx::MenuItem->new( $menu, wxID_ANY, 'Löschen' );
-#	
-#	$menu->Append( $addEntry );
-#	$menu->Append( $editEntry );
-#	$menu->AppendSeparator;
-#	$menu->Append( $removeEntry );
-#	
-#	Wx::Event::EVT_LIST_ITEM_ACTIVATED( $this, $this, \&OnActivated );
-#	Wx::Event::EVT_RIGHT_DOWN( $this, \&OnRightClick );
-#		
-#	Wx::Event::EVT_MENU( $this, $addEntry   , \&OnMenu_Add );
-#	Wx::Event::EVT_MENU( $this, $editEntry   , \&OnMenu_Edit );
-#	Wx::Event::EVT_MENU( $this, $removeEntry, sub { $this->RemoveSelected } );	
+	my $menu = $this->{contextMenu} = Wx::Menu->new;
+		
+	my $addEntry    = Wx::MenuItem->new( $menu, wxID_ANY, 'Neu' );
+	my $editEntry   = Wx::MenuItem->new( $menu, wxID_ANY, 'Bearbeiten' );
+	my $removeEntry = Wx::MenuItem->new( $menu, wxID_ANY, 'Löschen' );
+	
+	$menu->Append( $addEntry );
+	$menu->Append( $editEntry );
+	$menu->AppendSeparator;
+	$menu->Append( $removeEntry );
+	
+	Wx::Event::EVT_LIST_ITEM_ACTIVATED( $this, $this, \&OnActivated );
+	Wx::Event::EVT_RIGHT_DOWN( $this, \&OnRightClick );
+		
+	Wx::Event::EVT_MENU( $this, $addEntry   , \&OnMenu_Add );
+	Wx::Event::EVT_MENU( $this, $editEntry   , \&OnMenu_Edit );
+	Wx::Event::EVT_MENU( $this, $removeEntry, sub { $this->RemoveSelected } );	
 	
 	return $this;
 }
@@ -84,6 +83,63 @@ sub loadFrom {
 	1;
 }
 
+=head2 storeTo( resultset )
+
+=cut
+
+sub storeTo {
+	my ( $this, $rs ) = @_;
+	
+	# erst mal alle Links aus der LB ziehen
+	my %newLinks;
+	my @newLinks;
+	
+	for ( my $i = 0; $i < $this->GetItemCount; $i++ ) {
+		my $id = $this->GetItemData( $i );
+		
+		if ( not $id ) {
+			push @newLinks, {
+				Bezeichnung => $this->GetItem( $i )->GetText,
+				URL         => $this->GetItem( $i, 1 )->GetText,
+			};
+			next;
+		}
+		
+		$newLinks{ $id }{Bezeichnung} = $this->GetItem( $i )   ->GetText;
+		$newLinks{ $id }{URL}         = $this->GetItem( $i, 1 )->GetText;
+	}
+	
+	# gespeicherte Links holen
+	my @links = $rs->Links;
+
+	for my $_ ( @links ) {
+		
+		# wenn die Id existiert -> update ( nur url )
+		if ( exists $newLinks{ $_->id } ) {
+			$_->URL        ( $newLinks{ $_->id }{ URL } );
+			$_->update;
+		}
+		
+		# wenn nicht -> delete
+		else {
+			$_->delete;
+		}
+	}
+	
+	# alles andere wird neu Hinzugefügt
+	for my $_ ( @newLinks ) {
+		$rs->create_related( 
+			'Links',
+			{
+				LinkBezeichnung => $schema->resultset( 'LinkBezeichnung' )->find( { Bezeichnung => $_->{Bezeichnung} } )->id,
+				URL => $_->{URL},
+			} 
+		);
+	}
+	
+	1;
+}
+
 =head2 clear
 
 =cut
@@ -96,7 +152,6 @@ sub clear {
 
 1;
 
-__END__
 =head2 OnActivated
 
 =cut
@@ -112,7 +167,8 @@ sub OnActivated {
 		
 		Wx::LaunchDefaultBrowser( $url )
 			or $logger->error( 'Standardbrowser konnte nicht gestartet werden' );
-	} else {
+	} 
+	else {
 		$this->editLink( $event->GetIndex );
 	}
 
@@ -134,9 +190,9 @@ sub OnRightClick {
 	
 	# Aktiviere löschen nur,
 	# wenn auch ein Item ausgewählt wird
-	$this->ContextMenu->Enable( $this->ContextMenu->FindItemByPosition( 1 )->GetId, $foundItem );
-	$this->ContextMenu->Enable( $this->ContextMenu->FindItemByPosition( 3 )->GetId, $foundItem );
-	$this->PopupMenu( $this->ContextMenu, wxDefaultPosition );
+	$this->contextMenu->Enable( $this->contextMenu->FindItemByPosition( 1 )->GetId, $foundItem );
+	$this->contextMenu->Enable( $this->contextMenu->FindItemByPosition( 3 )->GetId, $foundItem );
+	$this->PopupMenu( $this->contextMenu, wxDefaultPosition );
 	
 	1;
 }
@@ -170,6 +226,8 @@ sub OnMenu_Edit {
 
 =head2 editLink( Index? )
 
+Wird ein Index übergeben, wird editiert, ansonsten neu
+
 =cut
 
 sub editLink {
@@ -179,7 +237,7 @@ sub editLink {
 	
 	require Scring::Wx::Dialog::EditLink;
 	
-	my $dlg = Scring::Wx::Dialog::EditLink->new( Wx::wxTheApp->Frame ); # parent wg. Centre
+	my $dlg = Scring::Wx::Dialog::EditLink->new( Wx::wxTheApp->frame ); # parent wg. Centre
 	$dlg->Centre;
 	
 	

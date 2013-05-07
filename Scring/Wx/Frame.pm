@@ -194,10 +194,13 @@ sub editMode {
 	
 	$this->{editMode} = $set;
 	
+	# TODO PaneObserver (Util::Observer)
+	
 	$this->videoList->editMode( $set );
 	$this->toolbar->editMode( $set );
 	$this->base->editMode( $set );
 	$this->info->editMode( $set );
+	$this->links->editMode( $set );
 	
 	# Wenn editMode deaktiviert, Fokus wieder
 	# auf die listBox setzen
@@ -268,6 +271,7 @@ sub saveVideo {
 	eval {
 		$this->base->storeTo( $rs );
 		$this->info->storeTo( $rs );
+		$this->links->storeTo( $rs );
 	} 
 	or do {
 		$schema->txn_rollback;
@@ -276,14 +280,6 @@ sub saveVideo {
 	};
 	
 	$schema->txn_commit;
-	
-#	if ( $rs->in_storage ) {
-#		$logger->debug( 'update' );
-#		$rs->update;
-#	} else {
-#		$logger->debug( 'insert' );
-#		$rs->insert;
-#	}
 	
 	$this->editMode( 0 );
 	$this->loadVideo( id => $rs->id );
@@ -337,6 +333,7 @@ sub deleteEntry {
 	
 	$dlg->Destroy;
 	
+	$this->clear;
 	$this->videoList->loadList;
 	
 	1;
