@@ -15,6 +15,8 @@ Scring::Wx::Widget::TextCtrlGenre
 use 5.16.0;
 use warnings;
 
+use List::MoreUtils qw( any none );
+
 use Wx qw( wxID_OK );
 use Wx::Event;
 
@@ -49,7 +51,7 @@ sub generateGenreMap {
 	
 	$logger->trace( '---' );
 
-	for my $_ ( $schema->resultset( 'Genre' )->all ) {
+	for ( $schema->resultset( 'Genre' )->all ) {
 		$this->{genreMap}{ $_->Bezeichnung } = $_->id;
 	}
 	
@@ -67,15 +69,15 @@ sub storeTo {
 	my @genre = map { $_->Bezeichnung } $rs->Genre;
 
 	# lösche überflüssige
-	for my $_ ( @genre ) {
-		$rs->delete_related( 'VideoGenre', { Genre => $this->{genreMap}{ $_ } } )
-			if not $_ ~~ \@newGenre;
+	for my $g ( @genre ) {
+		$rs->delete_related( 'VideoGenre', { Genre => $this->{genreMap}{ $g } } )
+			if none { $g eq $_ } @newGenre;
 	}
 	
 	# füge neue hinzu
-	for my $_ ( @newGenre ) {
-		$rs->create_related( 'VideoGenre', { Genre => $this->{genreMap}{ $_ } } )
-			if not $_ ~~ \@genre;
+	for my $g ( @newGenre ) {
+		$rs->create_related( 'VideoGenre', { Genre => $this->{genreMap}{ $g } } )
+			if none { $g eq $_} @genre;
 	}
 	
 	1;
@@ -128,15 +130,14 @@ sub OnDClick {
 	# Wird einer gefunden, so wird der index gespeichert
 	# und unten bei SetSelection verwendet
 	my @currentGenre = $this->genreFromString( $this->GetValue );
-	my @seen;
+	my ( @allGenre, @seen );
 	my $i = 0;
-	my @allGenre = map {
-		
-		push @seen, $i if $_ ~~ \@currentGenre;
+	
+	for my $genre ( sort keys $this->{genreMap} ) {
+		push @seen, $i if any { $genre eq $_ } @currentGenre;
 		$i++;
-		$_;
-		
-	} sort keys $this->{genreMap};
+		push @allGenre, $genre;
+	}
 	
 	my $dlg = Wx::MultiChoiceDialog->new( $this, '', 'Genre auswählen', \@allGenre );
 	$dlg->SetSelections( @seen );
@@ -145,7 +146,7 @@ sub OnDClick {
 	if ( $dlg->ShowModal == wxID_OK ) {
 		my @sel = $dlg->GetSelections;
 		my @newGenre;
-		for my $_ ( @sel ) {
+		for ( @sel ) {
 			push @newGenre, $allGenre[ $_ ];
 		}
 		$this->ChangeValue( join ';', @newGenre );

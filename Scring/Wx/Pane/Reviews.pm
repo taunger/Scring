@@ -73,10 +73,10 @@ sub loadFrom {
 	$this->DeleteAllItems;
 	
 	my $i = 0;
-	for my $_ ( $rs->Reviews ) {
-		$this->InsertStringItem( $i, $_->Author );
-		$this->SetItem( $i, 1, $_->Bewertung );
-		$this->SetItemData( $i, $_->id );
+	for my $review ( $rs->Reviews ) {
+		$this->InsertStringItem( $i, $review->Author );
+		$this->SetItem( $i, 1, $review->Bewertung );
+		$this->SetItemData( $i, $review->id );
 		$i++;
 	}
 	

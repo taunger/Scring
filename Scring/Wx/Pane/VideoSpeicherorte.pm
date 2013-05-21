@@ -70,7 +70,7 @@ sub loadFrom {
 	$this->DeleteAllItems;
 	
 	my $i = 0;
-	for my $_ ( $rs->Speicherorte ) {
+	for ( $rs->Speicherorte ) {
 		$this->InsertStringItem( $i, $_->Bezeichnung );
 		$this->SetItem( $i, 1, $_->Inhalt );
 		$this->SetItemData( $i, $_->id );

@@ -73,10 +73,10 @@ sub loadFrom {
 	$this->DeleteAllItems;
 	
 	my $i = 0;
-	for my $_ ( $rs->Links ) {
-		$this->InsertStringItem( $i, $_->Bezeichnung );
-		$this->SetItem( $i, 1, $_->URL );
-		$this->SetItemData( $i, $_->id );
+	for my $link ( $rs->Links ) {
+		$this->InsertStringItem( $i, $link->Bezeichnung );
+		$this->SetItem( $i, 1, $link->URL );
+		$this->SetItemData( $i, $link->id );
 		$i++;
 	}
 	
@@ -112,27 +112,27 @@ sub storeTo {
 	# gespeicherte Links holen
 	my @links = $rs->Links;
 
-	for my $_ ( @links ) {
+	for my $link ( @links ) {
 		
 		# wenn die Id existiert -> update ( nur url )
-		if ( exists $newLinks{ $_->id } ) {
-			$_->URL        ( $newLinks{ $_->id }{ URL } );
-			$_->update;
+		if ( exists $newLinks{ $link->id } ) {
+			$link->URL( $newLinks{ $link->id }{ URL } );
+			$link->update;
 		}
 		
 		# wenn nicht -> delete
 		else {
-			$_->delete;
+			$link->delete;
 		}
 	}
 	
 	# alles andere wird neu Hinzugefügt
-	for my $_ ( @newLinks ) {
+	for my $link ( @newLinks ) {
 		$rs->create_related( 
 			'Links',
 			{
-				LinkBezeichnung => $schema->resultset( 'LinkBezeichnung' )->find( { Bezeichnung => $_->{Bezeichnung} } )->id,
-				URL => $_->{URL},
+				LinkBezeichnung => $schema->resultset( 'LinkBezeichnung' )->find( { Bezeichnung => $link->{Bezeichnung} } )->id,
+				URL => $link->{URL},
 			} 
 		);
 	}

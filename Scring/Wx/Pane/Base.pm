@@ -63,7 +63,7 @@ sub initialize {
 	
 	# Als erstes alle Eingabefelder in der richtigen Reihenfolge
 	# definieren, um die Tab-Order zu wahren
-	for my $_ ( qw( Titel Originaltitel ) ) {
+	for ( qw( Titel Originaltitel ) ) {
 		$W->{ "ED_$_" } = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, $config->get( 'wx.panel.base.textctrlSize' ), wxBORDER_NONE | wxTE_READONLY );
 	}
 	
@@ -71,7 +71,7 @@ sub initialize {
 	
 	$W->{CH_Anime} = Wx::CheckBox->new( $this, wxID_ANY, '' ); $W->{CH_Anime}->SetToolTip( 'Anime' );
 	
-	for my $_ ( qw( Erscheinungsjahr Produktionsland Regisseur Laufzeit ) ) {
+	for ( qw( Erscheinungsjahr Produktionsland Regisseur Laufzeit ) ) {
 		$W->{ "ED_$_" } = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, $config->get( 'wx.panel.base.textctrlSize' ), wxBORDER_NONE | wxTE_READONLY );
 	}
 
@@ -81,11 +81,11 @@ sub initialize {
 	$W->{ED_Episoden}      = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, [ 40, 22 ], wxBORDER_NONE );
 	$W->{ED_LaufzeitExtra} = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, $config->get( 'wx.panel.base.textctrlSize' ), wxBORDER_NONE );
 		
-	for my $_ ( qw( IMDB OFDB Anisearch Bewertung ) ) {
+	for ( qw( IMDB OFDB Anisearch Bewertung ) ) {
 		$W->{ "ED_$_" } = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, $config->get( 'wx.panel.base.textctrlSize' ), wxBORDER_NONE | wxTE_READONLY );
 	}
 	
-	for my $_ ( qw( Handlung Kommentar ) ) {
+	for ( qw( Handlung Kommentar ) ) {
 		$W->{ "ED_$_" } = Wx::TextCtrl->new( $P, wxID_ANY, '', wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTE_READONLY | wxTE_MULTILINE );
 	}
 	
@@ -93,7 +93,7 @@ sub initialize {
 	$S->{Main} = Wx::BoxSizer->new( wxVERTICAL );
 	$S->{Rand} = Wx::BoxSizer->new( wxVERTICAL );
 		
-	for my $_ ( SINGLELINE_FIELDS_EXCLUDE_GENRE ) {
+	for ( SINGLELINE_FIELDS_EXCLUDE_GENRE ) {
 		$W->{ "ST_$_" } = Wx::StaticText->new( $P, wxID_ANY, "$_:" );
 		$S->{ $_ } = Wx::BoxSizer->new( wxHORIZONTAL );
 		$S->{ $_ }->Add( $W->{ "ST_$_" }, 1, wxRIGHT, 5 );
@@ -130,7 +130,7 @@ sub initialize {
 	
 	$S->{Rand}->Insert( 7, $S->{editLaufzeit}, 0, wxEXPAND | wxBOTTOM, 5 );
 	
-	for my $_ ( MULTILINE_FIELDS ) {
+	for ( MULTILINE_FIELDS ) {
 		$W->{ "ST_$_" } = Wx::StaticText->new( $P, wxID_ANY, "$_:" );
 
 		# Es scheint einen Resize-Bug zu geben, 
@@ -149,7 +149,7 @@ sub initialize {
 	# Die Hintergrundfarbe der Singleline Fields
 	# genau wie die der Multilines setzen
 	my $colour = $W->{ED_Handlung}->GetBackgroundColour;
-	for my $_ ( SINGLELINE_FIELDS ) {
+	for ( SINGLELINE_FIELDS ) {
 		$W->{ "ED_$_" }->SetBackgroundColour( $colour );
 	}
 	
@@ -173,7 +173,7 @@ sub loadFrom {
 	
 	my $W = $this->W;
 	
-	for my $_ ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung), MULTILINE_FIELDS ) {
+	for ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung), MULTILINE_FIELDS ) {
 		$W->{ "ED_$_" }->ChangeValue( $rs->get_column( $_ ) );
 	}
 
@@ -199,7 +199,7 @@ sub editMode {
 	return $this->{editMode} if not defined $set;
 	
 	# Alle Felder editierbar machen
-	for my $_ ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur IMDB OFDB Anisearch Bewertung), MULTILINE_FIELDS ) {
+	for ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur IMDB OFDB Anisearch Bewertung), MULTILINE_FIELDS ) {
 		$this->{W}{ "ED_$_" }->SetEditable( $set );
 	}
 	
@@ -231,7 +231,7 @@ sub editMode {
 sub clear {
 	my $this = shift;
 	
-	for my $_ ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung Genre Minuten Episoden Laufzeit), MULTILINE_FIELDS ) {
+	for ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung Genre Minuten Episoden Laufzeit), MULTILINE_FIELDS ) {
 		$this->{W}{"ED_$_"}->Clear;
 	}
 	
@@ -250,7 +250,7 @@ sub storeTo {
 	
 	my $W = $this->{W};
 	
-	for my $_ ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung Episoden Minuten ), MULTILINE_FIELDS ) {
+	for ( qw(Titel Originaltitel Erscheinungsjahr Produktionsland Regisseur LaufzeitExtra IMDB OFDB Anisearch Bewertung Episoden Minuten ), MULTILINE_FIELDS ) {
 		$rs->set_column( $_ => $W->{ "ED_$_" }->GetValue );
 	}
 	
